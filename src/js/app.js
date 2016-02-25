@@ -115,13 +115,14 @@ var TabViewController = React.createClass({
 	renderSideBar () {
 		var sidebarStyle = {
 			background: '#fff',
-			top:0,
-			bottom: 0,
-			height: '100vh'
+			zIndex: 200,
+			minHeight: '90vh'
 		}
 		return (
 			<div style={sidebarStyle}>
-				Content of sidebar
+				<p>Content of sidebar</p>
+				<p>We can add any</p>
+				<p>touchstonejs components here</p>
 			</div>
 		);
 	},
