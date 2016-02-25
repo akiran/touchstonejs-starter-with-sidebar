@@ -144,7 +144,7 @@ var TabViewController = React.createClass({
 				sidebar={this.renderSideBar()} 
 				open={this.state.isSideBarOpen}
 				onSetOpen={this.onSetSidebarOpen}>
-				<Container onClick={this.toggleSideBar}>
+				<Container>
 					<UI.Button onTap={this.toggleSideBar}>
 						open sidebar
 					</UI.Button>
