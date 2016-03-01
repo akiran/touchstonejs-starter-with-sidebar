@@ -20,6 +20,12 @@ const peopleStore = new PeopleStore()
 var App = React.createClass({
 	mixins: [createApp()],
 
+	getInitialState: function () {
+		return {
+			isSideBarOpen: false
+		}
+	},
+
 	childContextTypes: {
 		peopleStore: React.PropTypes.object
 	},
@@ -36,19 +42,47 @@ var App = React.createClass({
 			navigator.splashscreen.hide();
 		}
 	},
+	toggleSideBar () {
+		this.setState({
+			isSideBarOpen: !this.state.isSideBarOpen
+		})
+	},
 
+	onSetSidebarOpen: function(open) {
+    this.setState({isSideBarOpen: open});
+  },
+
+	renderSideBar () {
+		var sidebarStyle = {
+			background: '#fff',
+			zIndex: 200,
+			minHeight: '100vh'
+		}
+		return (
+			<div style={sidebarStyle}>
+				<p>Content of sidebar</p>
+				<p>We can add any</p>
+				<p>touchstonejs components here</p>
+			</div>
+		);
+	},
 	render () {
 		let appWrapperClassName = 'app-wrapper device--' + (window.device || {}).platform
 
 		return (
-			<div className={appWrapperClassName}>
-				<div className="device-silhouette">
-					<ViewManager name="app" defaultView="main">
-						<View name="main" component={MainViewController} />
-						<View name="transitions-target-over" component={require('./views/transitions-target-over')} />
-					</ViewManager>
+			<SideBar 
+				sidebar={this.renderSideBar()} 
+				open={this.state.isSideBarOpen}
+				onSetOpen={this.onSetSidebarOpen}>
+				<div className={appWrapperClassName}>
+					<div className="device-silhouette">
+						<ViewManager name="app" defaultView="main">
+							<View name="main" component={MainViewController} />
+							<View name="transitions-target-over" component={require('./views/transitions-target-over')} />
+						</ViewManager>
+					</div>
 				</div>
-			</div>
+			</SideBar>
 		);
 	}
 });
@@ -102,30 +136,7 @@ var TabViewController = React.createClass({
 		})
 	},
 
-	toggleSideBar () {
-		this.setState({
-			isSideBarOpen: !this.state.isSideBarOpen
-		})
-	},
-
-	onSetSidebarOpen: function(open) {
-    this.setState({isSideBarOpen: open});
-  },
-
-	renderSideBar () {
-		var sidebarStyle = {
-			background: '#fff',
-			zIndex: 200,
-			minHeight: '90vh'
-		}
-		return (
-			<div style={sidebarStyle}>
-				<p>Content of sidebar</p>
-				<p>We can add any</p>
-				<p>touchstonejs components here</p>
-			</div>
-		);
-	},
+	
 
 	render () {
 		let selectedTab = this.state.selectedTab
@@ -140,14 +151,9 @@ var TabViewController = React.createClass({
 		}
 
 		return (
-			<SideBar 
-				sidebar={this.renderSideBar()} 
-				open={this.state.isSideBarOpen}
-				onSetOpen={this.onSetSidebarOpen}>
+			
 				<Container>
-					<UI.Button onTap={this.toggleSideBar}>
-						open sidebar
-					</UI.Button>
+					
 						<ViewManager ref="vm" name="tabs" defaultView={selectedTab} onViewChange={this.onViewChange}>
 							<View name="lists" component={require('./views/lists')} />
 							<View name="list-simple" component={require('./views/list-simple')} />
@@ -177,8 +183,6 @@ var TabViewController = React.createClass({
 							</UI.Tabs.Tab>
 						</UI.Tabs.Navigator>
 				</Container>
-			</SideBar>
-
 		);
 	}
 });
